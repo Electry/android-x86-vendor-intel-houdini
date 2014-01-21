@@ -17,6 +17,7 @@ PRODUCT_COPY_FILES := $(foreach f,$(LOCAL_SRC_FILES),$(LOCAL_PATH)/$(f):system/$
 PRODUCT_PACKAGES := check.xml
 
 PRODUCT_PROPERTY_OVERRIDES := \
+    ro.config.personality = compat_layout \
     ro.product.cpu.abi2 = armeabi-v7a \
     ro.product.cpu.upgradeabi = armeabi
 
