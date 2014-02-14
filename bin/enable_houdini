@@ -1,5 +1,28 @@
 #!/system/bin/sh
 
+cd /system/lib/arm
+if [ ! -e ../libhoudini.so -a ! -e libhoudini.so ]; then
+	if touch .dl_houdini; then
+		rm -f .dl_houdini
+	else
+		cd .. && cp -a arm /data/local/tmp
+		mount -t tmpfs tmpfs arm && cd arm &&
+			cp -a /data/local/tmp/arm/* . && rm -rf /data/local/tmp/arm
+	fi
+fi
+
+cd /data/local/tmp
+while [ ! -e /system/lib/libhoudini.so -a ! -e /system/lib/arm/libhoudini.so ]; do
+	while [ "$(getprop net.dns1)" = "" ]; do
+		sleep 10
+	done
+	[ "`uname -m`" = "x86_64" ] && url=http://goo.gl/sfZRr5 || url=http://goo.gl/vvsfmp
+	wget $url -cO houdini.tgz &&
+		bzcat houdini.tgz | tar xvf - -C /system/lib/arm && rm -f houdini.tgz && break
+	rm -f houdini.tgz
+	sleep 30
+done
+
 # if you don't see the files 'register' and 'status' in /proc/sys/fs/binfmt_misc
 # then run the following command:
 # mount -t binfmt_misc none /proc/sys/fs/binfmt_misc
@@ -23,14 +46,13 @@ if [ -e /proc/sys/fs/binfmt_misc/register ]; then
 		houdini_bin=1
 	fi
 else
-	echo "No binfmt_misc support"
+	log -pe -thoudini "No binfmt_misc support"
 fi
 
 if [ $houdini_bin -eq 0 ]; then
-	echo "houdini enabling failed !!!"
-fi
-if [ $houdini_bin -eq 1 ]; then
-	echo "houdini enabled"
+	log -pe -thoudini "houdini enabling failed!"
+else
+	log -pi -thoudini "houdini enabled"
 fi
 
 exit 0
