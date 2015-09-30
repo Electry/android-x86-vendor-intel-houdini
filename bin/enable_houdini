@@ -16,7 +16,7 @@ while [ ! -e /system/lib/libhoudini.so -a ! -e /system/lib/arm/libhoudini.so ]; 
 	while [ "$(getprop net.dns1)" = "" ]; do
 		sleep 10
 	done
-	[ "`uname -m`" = "x86_64" ] && url=http://goo.gl/sfZRr5 || url=http://goo.gl/vvsfmp
+	[ "`uname -m`" = "x86_64" ] && url=http://goo.gl/E9rgu3 || url=http://goo.gl/IP06KC
 	wget $url -cO houdini.tgz &&
 		bzcat houdini.tgz | tar xvf - -C /system/lib/arm && rm -f houdini.tgz && break
 	rm -f houdini.tgz
