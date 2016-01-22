@@ -1,5 +1,14 @@
 #!/system/bin/sh
 
+get_url()
+{
+	u=0
+	urlx[0]=http://goo.gl/IP06KC
+	urly[0]=http://goo.gl/E9rgu3
+	urlx[1]=http://t.cn/Rb8w016
+	urly[1]=http://t.cn/Rb8wO1f
+}
+
 cd /system/lib/arm
 if [ ! -e ../libhoudini.so -a ! -e libhoudini.so ]; then
 	if touch .dl_houdini; then
@@ -11,16 +20,19 @@ if [ ! -e ../libhoudini.so -a ! -e libhoudini.so ]; then
 	fi
 fi
 
+get_url
 cd /data/local/tmp
 while [ ! -e /system/lib/libhoudini.so -a ! -e /system/lib/arm/libhoudini.so ]; do
 	while [ "$(getprop net.dns1)" = "" ]; do
 		sleep 10
 	done
-	[ "`uname -m`" = "x86_64" ] && url=http://goo.gl/E9rgu3 || url=http://goo.gl/IP06KC
+	[ "`uname -m`" = "x86_64" ] && url=${urly[$u]} || url=${urlx[$u]}
 	wget $url -cO houdini.tgz &&
 		bzcat houdini.tgz | tar xvf - -C /system/lib/arm && rm -f houdini.tgz && break
 	rm -f houdini.tgz
 	sleep 30
+	u=$(($u+1))
+	[ $u -ge ${#urlx[@]} ] && u=0
 done
 
 # if you don't see the files 'register' and 'status' in /proc/sys/fs/binfmt_misc
