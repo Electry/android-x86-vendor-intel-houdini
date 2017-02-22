@@ -10,7 +10,7 @@
 
 INTEL_HOUDINI := true
 
-LOCAL_SRC_FILES := $(filter-out %.mk %.xml,$(subst $(LOCAL_PATH)/,,$(shell find $(LOCAL_PATH)/{bin,lib} -type f)))
+LOCAL_SRC_FILES := $(filter-out %.mk %.xml,$(subst $(LOCAL_PATH)/,,$(shell find $(LOCAL_PATH)/{bin,lib,lib64} -type f)))
 
 PRODUCT_COPY_FILES := $(foreach f,$(LOCAL_SRC_FILES),$(LOCAL_PATH)/$(f):system/$(f))
 
